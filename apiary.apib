@@ -63,27 +63,24 @@ Crear un pedido en MASH para ser alistado (solo para clientes con servicio de bo
             }
         }
 
-## Crear Paquetes [/send_data]
+## Crear Paquetes [/send_data?api_key=]
 
 ### Enviar Paquetes a MASH [POST]
 
 Crear un nuevo paquete en MASH
 
 + Attributes
-    + peso (number) - peso del paquete
-    + distrito_entrega (number) - se obtiene del método get /distrito/{canton} o pueden usar el método get /distritos/all
-    + distrito_origen (number) - se obtiene del método get /distrito/{canton} o pueden usar el método get /distritos/all
-    + send_email (number) - 1|0 se utiliza para recibir la notificación por correo
-    + send_bot (number) - 1|0 enviar a MASH notificación a un bot de Telegram
-    + envia (string) - Persona quien está realizando el envio del paquete
-    + telefono1 (string) - telefono de quien "Envia"
-    + telefono2 (string) - telefono del "Destinatario"
+    + correo_web (string) - Correo para recibir la notificación
     + direccion_entrega (string) - Dirección detallada a donde se entregará el paquete
     + direccion_origen (string) - Dirección detallada a donde se busca el paquete
     + destinatario (string) - Persona quien está realizando el envio del paquete
-    + correo_web (string) - Correo para recibir la notificación
-    + sendDataBy (string) - enviar la palabra "ApiKey"
-    + api_key (string) - apikey generada por MASH
+    + distrito_entrega (number) - se obtiene del método get /distrito/{canton} o pueden usar el método get /distritos/all
+    + distrito_origen (number) - se obtiene del método get /distrito/{canton} o pueden usar el método get /distritos/all
+    + envia (string) - Persona quien está realizando el envio del paquete
+    + peso (number) - peso del paquete
+    + send_email (number) - 1|0 se utiliza para recibir la notificación por correo
+    + telefono1 (string) - telefono de quien "Envia"
+    + telefono2 (string) - telefono del "Destinatario"
 
 + Request (form-data)
 
