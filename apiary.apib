@@ -1,0 +1,396 @@
+FORMAT: 1A
+HOST: https://api.mashcl.club/
+
+# Mash API
+
+API de MASH
+
+## Crear Alisto [/send_alisto/?api_key=]
+
+### Enviar Solicitud de Alisto a MASH [POST]
+
+Crear un pedido en MASH para ser alistado (solo para clientes con servicio de bodegaje y alisto)
+
++ Attributes
+    + destinatario (string) - Persona quien está realizando el envio del paquete
+    + direccion_entrega (string) - Dirección detallada a donde se entregará el paquete
+    + telefono_principal (string) - telefono de la persona que esta solicitando el paquete
+    + distrito_entrega (number) - codigo del distrito donde se entregará el paquete (estos codigos se obtienen de la misma API, en la documentación esta como obtener provincia, cantón y distrito)
+    + LINEAS (object) - Objeto con el detalle de los productos {LINEA: 1...n, PRODUCTO: sku del producto: CANTIDAD: cantidad del producto}
+    
+
++ Request (form-data)
+
+        [ 
+            {
+                "destinatario":"Leonardo Alvarado" ,
+                "direccion_entrega": "mi casa",
+                "telefono_principal":"585200715",
+                "distrito_entrega":5,
+                "LINEAS": [
+                    {
+                        "LINEA": 1,
+                        "PRODUCTO": "12345678",
+                        "CANTIDAD": 2
+                    },
+                    {
+                        "LINEA": 2,
+                        "PRODUCTO": "23456789",
+                        "CANTIDAD": 1
+                    },
+                    {
+                        "LINEA": 3,
+                        "PRODUCTO": "34567890",
+                        "CANTIDAD": 4
+                    }
+                ]
+            }
+        ]
+    
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code": "codigo de exito o error",
+                "msg": "Mensaje de exito o error",
+                "transacciones": [
+                    {
+                        "pedido": "TEST255859410",
+                        "msg_pedido": "Pedido Exitoso",
+                        "error": 0
+                    }
+                ]
+            }
+        }
+
+## Crear Paquetes [/send_data]
+
+### Enviar Paquetes a MASH [POST]
+
+Crear un nuevo paquete en MASH
+
++ Attributes
+    + peso (number) - peso del paquete
+    + distrito_entrega (number) - se obtiene del método get /distrito/{canton} o pueden usar el método get /distritos/all
+    + distrito_origen (number) - se obtiene del método get /distrito/{canton} o pueden usar el método get /distritos/all
+    + send_email (number) - 1|0 se utiliza para recibir la notificación por correo
+    + send_bot (number) - 1|0 enviar a MASH notificación a un bot de Telegram
+    + envia (string) - Persona quien está realizando el envio del paquete
+    + telefono1 (string) - telefono de quien "Envia"
+    + telefono2 (string) - telefono del "Destinatario"
+    + direccion_entrega (string) - Dirección detallada a donde se entregará el paquete
+    + direccion_origen (string) - Dirección detallada a donde se busca el paquete
+    + destinatario (string) - Persona quien está realizando el envio del paquete
+    + correo_web (string) - Correo para recibir la notificación
+    + sendDataBy (string) - enviar la palabra "ApiKey"
+    + api_key (string) - apikey generada por MASH
+
++ Request (form-data)
+
+        {
+            "peso": 1,
+            "distrito_entrega": 1,
+            "distrito_origen": 1,
+            "send_email": 1,
+            "send_bot": 1,
+            "envia": "Juan Perez",
+            "telefono1": "12345678",
+            "telefono2": "12345678",
+            "direccion_entrega": "Santa Ana 50 sur del restaurante La Adelita calle vieja a Santa Ana",
+            "direccion_origen": "Dirección física donde debemos recoger el paquete",
+            "destinatario": "Luis Ramirez",
+            "correo_web": "ejemplo@mashcl.com"
+            "sendDataBy": "ApiKey"
+            "api_key": "321654987qweasdzxc"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code": "codigo de exito o error",
+                "msg": "Mensaje de exito o error",
+                "cod_paquete": "codigo del paquete creado, posteriormente se usa para consultar el tracking"
+            }
+        }
+
+## Paquetes [/paquetes/{estatus}?api_key=]
+
+### Obtener Paquetes por Estatus [GET]
+
+Consultar paquetes por estatus según el cliente
+
++ Estatus 1: En Bodega Mash,
++ Estatus 2: En ruta de entrega,
++ Estatus 3: Entregado,
++ Estatus 4: Devuelto,
++ Estatus 5: Rechazado,
++ Estatus 6: En ruta de reintento,
++ Estatus 7: En transito a sede,
++ Estatus 8: Recolección en Transito,
++ Estatus 9: Por Recolectar
++ Estatus 10: Recibido en Sede
++ Estatus 11: Pendiente de Coordinar
++ Estatus 12: Recolección en Proceso
++ Estatus 13: Recolectado
+
++ Parameters
+    + estatus: 1 (required, number) - Estatus del paquete
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":106,
+                "data":[
+                    {
+                        "asignado_sede": "2020-07-29 09:40:38",
+                        "cod_paquete": "94511",
+                        "codigo": "390420",
+                        "creado_a": "2020-07-29 09:40:38",
+                        "destinatario": "Nombre del destinario",
+                        "destino_gam": "",
+                        "direccion_entrega": "Direccion de entrega del paquete",
+                        "entregado_a": "2020-07-29 09:43:02",
+                        "envia": "Persona o Empresa quien realiza el Envio",
+                        "estatus": "1",
+                        "fecha_entrega": "2020-07-30",
+                        "fecha_ruta": "2020-07-29",
+                        "firma": null,
+                        "latitud": "0.000000",
+                        "logintud": "0.000000",
+                        "obs": "",
+                        "origen_gam": "",
+                        "peso": "0.00",
+                        "telefono1": "12345678 0 0",
+                        "telefono2": ""
+                    },
+                    {
+                        "asignado_sede": "2020-07-29 09:40:40",
+                        "cod_paquete": "94851",
+                        "codigo": "391190",
+                        "creado_a": "2020-07-29 09:40:40",
+                        "destinatario": "Nombre del destinario",
+                        "destino_gam": "",
+                        "direccion_entrega": "Direccion de entrega del paquete",
+                        "entregado_a": "2020-07-29 09:43:03",
+                        "envia": "Persona o Empresa quien realiza el Envio",
+                        "estatus": "1",
+                        "fecha_entrega": "2020-07-30",
+                        "fecha_ruta": "2020-07-29",
+                        "firma": null,
+                        "latitud": "0.000000",
+                        "logintud": "0.000000",
+                        "obs": "",
+                        "origen_gam": "",
+                        "peso": "0.00",
+                        "telefono1": "12345678",
+                        "telefono2": ""
+                    }
+                ]
+            }
+        }
+
+## Tracking [/tracking/{codigo}]
+
+### Obtener Tracking del Paquete [GET]
+
+Consultar el Tracking de un paquete
+
++ Parameters
+    + codigo: 1 (required, string) - Código del paquete a consultar
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":107,
+                "data":{
+                    "paquete":{
+                        "codigo":"NWC104975181",
+                        "destinatario":"Destinario del paquete",
+                        "cliente":"",
+                        "envia":"",
+                        "direccion_entrega":"Direccion del Paquete",
+                        "estatus":"7",
+                        "estatus_nombre":"7",
+                        "telefono1":"12345678",
+                        "telefono2":"",
+                        "obs":"Observacion del apquete"
+                    },
+                    "tracking":[{
+                        "estatus_texto":"EN TRANSITO A MASH",
+                        "observacion":"",
+                        "fecha":"2020-07-30 16:38:52",
+                        "firma":null
+                    },
+                    {
+                        "estatus_texto":"EN BODEGA MASH",
+                        "observacion":"",
+                        "fecha":"2020-07-31 10:24:41",
+                        "firma":null
+                    },
+                    {
+                        "estatus_texto":"RECIBIDO EN SEDE",
+                        "observacion":"Enviado a CENTRO DE ACOPIO GUANACASTE",
+                        "fecha":"2020-07-31 10:24:58",
+                        "firma":null
+                    }]
+                }
+            }
+        }
+
+## Provincias [/provincia]
+
+### Obtener Provincias [GET]
+
+Obtener provincias
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":103,
+                "data":{
+                    [
+                        {
+                           "cod_provincia": "1",
+                           "nombre": "San José"
+                        },
+                        {
+                           "cod_provincia": "2",
+                           "nombre": "Alajuela"
+                        }
+                    ]
+                }
+            }
+        }
+        
+## Cantones [/canton/{provincia}]
+
+### Obtener Cantones [GET]
+
+Obtener cantones de la provincia
+
++ Parameters
+    + provincia: 1 (required, number) - id de la provincia, se obtiene del metodo get /canton/{provincia}
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":104,
+                "data":{
+                    [
+                        {
+                           "cod_canton": "1",
+                           "nombre": "San José",
+                           "orden": "01",
+                           "id_provincia": "1",
+                        },
+                        {
+                           "cod_canton": "2",
+                           "nombre": "Escazú",
+                           "orden": "02",
+                           "id_provincia": "1",
+                        }
+                    ]
+                }
+            }
+        }
+        
+        
+## Distritos [/distrito/{canton}]
+
+### Obtener Distritos [GET]
+
+Obtener distritos del cantón
+
++ Parameters
+    + canton: 1 (required, number) - id del canton, se obtiene del metodo get /canton/{provincia}
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":104,
+                "data":{
+                    [
+                        {
+                           "cod_distrito": "1",
+                           "nombre": "Carmen",
+                           "orden": "01",
+                           "id_canton": "1",
+                        },
+                        {
+                           "cod_distrito": "2",
+                           "nombre": "Merced",
+                           "orden": "02",
+                           "id_canton": "1",
+                        }
+                    ]
+                }
+            }
+        }
+        
+## Sedes [/sedes/all]
+
+### Obtener Sedes [GET]
+
+Obtener Sedes y sus distritos asociados
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":121,
+                "data":{
+                    [
+                        {
+                           "cod_sede": "-1",
+                           "nombre": "TODAS",
+                           "direccion": "",
+                           "posicion": "0",
+                           "distritos": [],
+                        },
+                        {
+                           "cod_distrito": "2",
+                           "nombre": "CEDI PRINCIPAL",
+                           "direccion": "",
+                           "posicion": "0",
+                           "distritos": [
+                                {
+                                    "cod_distrito": "1",
+                                    "nombre": "San josé",
+                                },
+                           ],
+                        }
+                    ]
+                }
+            }
+        }
+        
+## Sede por Distrito [/sede/distrito/{distrito}]
+
+### Obtener Sede por Distrito [GET]
+
+Obtener la sede por el distrito 
+
++ Parameters
+    + distrito: 1 (required, number) - id del distrito
+
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code":122,
+                "data":{
+                    {
+                       "id": "4",
+                       "nombre": "SEDE LIBERIA",
+                       "direccion": "CENTRO DE LA PIZZERIA ANDINA 50 OESTE",
+                       "posicion": "10"
+                    }
+                }
+            }
+        }
