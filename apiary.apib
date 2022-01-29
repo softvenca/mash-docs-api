@@ -105,9 +105,36 @@ Crear un nuevo paquete en MASH
 
         {
             "response":{
-                "code": "codigo de exito o error",
-                "msg": "Mensaje de exito o error",
-                "cod_paquete": "codigo del paquete creado, posteriormente se usa para consultar el tracking"
+                "code": "101 | 501",
+                "msg": "Paquete guardado exitosamente bajo el Nro: PAQ1234567",
+                "cod_paquete": "PAQ1234567",
+                "consecutivo": 1234567
+            }
+        }
+
+## Cacular Precio [//calcular/{origen}/{destino}/{peso}?api_key=]
+
+### Obtener precio del paquete [GET]
+
+Consulta precio del paquete según su origen,destino,peso y plan del cliente
+
++ Parameters
+    + origen: 1 | 0 (required, number) - 1 para GAM, 0 para Rural
+    + destino: 1 | 0 (required, number) - 1 para GAM, 0 para Rural
+    + peso: 1 (required, number) - peso del paquete
+    
++ Response 200 (application/json)
+
+        {
+            "response":{
+                "code": "109",
+                "data":{
+                    "origen": "GAM",
+                    "destino":"GAM",
+                    "base_imponible":2035,
+                    "IVA":265,
+                    "total":2300
+                }
             }
         }
 
